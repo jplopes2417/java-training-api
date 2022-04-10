@@ -34,15 +34,35 @@ class UserServiceTest {
     @InjectMocks
     private UserServiceImpl userService;
 
+    private UserRequestDto userRequest;
+    private UserUpdateDto userUpdate;
+
     @BeforeEach
     public void setup() {
         this.userService = new UserServiceImpl(userRepository);
     }
 
+    @BeforeEach
+    public void criacaoDadosValidos(){
+
+        userRequest = UserRequestDto.builder()
+                .name("TESTE")
+                .email("teste@teste.algo")
+                .cpf("680.983.050-23")
+                .birthDate(LocalDate.now())
+                .build();
+
+        userUpdate = UserUpdateDto.builder()
+                    .name("UPDATE")
+                    .email("teste_update@teste.algo")
+                    .build();
+
+    }
+
     @Test
     void deveriaSalvarUsuarioComSucesso() {
 
-        UserRequestDto userRequestDto = userRequestDtoValido();
+        UserRequestDto userRequestDto = userRequest;
         UserResponseDto userResponseDto = UserMapper.INSTANCE.toResponseDto(userRequestDto);
         ResponseEntity<?> responseEntitySucesso = new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
         User user = UserMapper.INSTANCE.toModel(userRequestDto);
@@ -60,7 +80,7 @@ class UserServiceTest {
     @Test
     void naoDeveriaSalvarUsuarioComCPFRepetido() {
 
-        UserRequestDto userRequestDto = userRequestDtoValido();
+        UserRequestDto userRequestDto = userRequest;
         User user = UserMapper.INSTANCE.toModel(userRequestDto);
 
         when(userRepository.findByCpf(user.getCpf())).thenReturn(user);
@@ -71,7 +91,7 @@ class UserServiceTest {
     @Test
     void naoDeveriaSalvarUsuarioComEmailRepetido() {
 
-        UserRequestDto userRequestDto = userRequestDtoValido();
+        UserRequestDto userRequestDto = userRequest;
         User user = UserMapper.INSTANCE.toModel(userRequestDto);
 
         when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
@@ -82,7 +102,7 @@ class UserServiceTest {
     @Test
     void deletarUsuarioComSucesso() {
 
-        UserRequestDto userRequestDto = userRequestDtoValido();
+        UserRequestDto userRequestDto = userRequest;
         ResponseEntity<?> responseEntitySucesso = new ResponseEntity<>(null, HttpStatus.OK);
         User user = UserMapper.INSTANCE.toModel(userRequestDto);
 
@@ -108,8 +128,8 @@ class UserServiceTest {
     @Test
     void atualizarUsuarioComSucesso() {
 
-        UserUpdateDto userUpdateDto = userUpdateDtoValido();
-        UserRequestDto userRequestDto = userRequestDtoValido();
+        UserUpdateDto userUpdateDto = userUpdate;
+        UserRequestDto userRequestDto = userRequest;
         User user = UserMapper.INSTANCE.toModel(userRequestDto);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
@@ -125,8 +145,8 @@ class UserServiceTest {
     @Test
     void naoDeveriaAtualizarUsuarioComEmailJaExistenteNoBancoDeDados() {
 
-        UserUpdateDto userUpdateDto = userUpdateDtoValido();
-        UserRequestDto userRequestDto = userRequestDtoValido();
+        UserUpdateDto userUpdateDto = userUpdate;
+        UserRequestDto userRequestDto = userRequest;
         userRequestDto.setEmail(userUpdateDto.getEmail());
 
         User user = UserMapper.INSTANCE.toModel(userRequestDto);
@@ -138,7 +158,7 @@ class UserServiceTest {
 
     @Test
     void buscarUsuarioComSucesso() {
-        UserRequestDto userRequestDto = userRequestDtoValido();
+        UserRequestDto userRequestDto = userRequest;
         User user = UserMapper.INSTANCE.toModel(userRequestDto);
         UserResponseDto userResponseDto = UserMapper.INSTANCE.toResponseDto(userRequestDto);
         ResponseEntity<?> responseEntitySucesso = new ResponseEntity<>(userResponseDto, HttpStatus.OK);
@@ -151,7 +171,7 @@ class UserServiceTest {
 
     @Test
     void naoDeveriaEncontrarUsuarioComCPFInexistenteNaBase() {
-        UserRequestDto userRequestDto = userRequestDtoValido();
+        UserRequestDto userRequestDto = userRequest;
         User user = UserMapper.INSTANCE.toModel(userRequestDto);
 
         when(userRepository.findByCpf(user.getCpf())).thenReturn(null);
@@ -162,7 +182,7 @@ class UserServiceTest {
     @Test
     void listarTodosOsUsuariosComSucesso() {
 
-        UserRequestDto userRequestDto = userRequestDtoValido();
+        UserRequestDto userRequestDto = userRequest;
         User user = UserMapper.INSTANCE.toModel(userRequestDto);
         List<User> users = new ArrayList<>();
 
@@ -179,24 +199,5 @@ class UserServiceTest {
 
         Assert.assertEquals(responseEntitySucesso, responseEntity);
 
-
-    }
-
-    // TODO: PENSAR NUMA FORMA DE EXTRAIR ESSE MÉTODO
-    private UserRequestDto userRequestDtoValido() {
-        return UserRequestDto.builder()
-                .name("TESTE")
-                .email("teste@teste.algo")
-                .cpf("680.983.050-23")
-                .birthDate(LocalDate.now())
-                .build();
-    }
-
-    // TODO: PENSAR NUMA FORMA DE EXTRAIR ESSE MÉTODO
-    private UserUpdateDto userUpdateDtoValido() {
-        return UserUpdateDto.builder()
-                .name("UPDATE")
-                .email("teste_update@teste.algo")
-                .build();
     }
 }
