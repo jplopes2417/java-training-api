@@ -1,32 +1,66 @@
 package br.com.training.controller;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import br.com.training.dto.UserRequestDto;
+import br.com.training.dto.UserUpdateDto;
+import br.com.training.service.UserService;
+import br.com.training.service.UserServiceImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-import br.com.training.model.User;
-import br.com.training.repository.UserRepository;
+import java.util.HashMap;
+import java.util.Map;
 
+@Validated
 @RestController
 @RestControllerAdvice
 @RequestMapping("/users")
 public class UserController {
 
-	@Autowired
-	private UserRepository userRepository;
+	private final UserService userService;
+
+	public UserController(UserServiceImpl userService) {
+		this.userService = userService;
+	}
 
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public User createUser(@RequestBody @Valid User user) {
-		return userRepository.save(user);
+	public ResponseEntity<?> createUser(@Valid @RequestBody UserRequestDto user) {
+		return userService.salvarUsuario(user);
 	}
 
 	@GetMapping (value = "/{cpf}")
-	@ResponseStatus(HttpStatus.OK)
-    public User getUser (@PathVariable String cpf){
-        return userRepository.findByCpf(cpf);
+    public ResponseEntity<?> getUser (@PathVariable String cpf){
+		return userService.buscarUsuario(cpf);
     }
+
+    @DeleteMapping(value = "/{id}")
+	public ResponseEntity<?> deleteUser(@PathVariable Long id){
+		return userService.deletarUsuario(id);
+	}
+
+	@PutMapping(value = "/{id}")
+	@Transactional
+	public ResponseEntity<?> updateUser(@PathVariable long id, @Valid @RequestBody UserUpdateDto userUpdateDto){
+		return userService.atualizarUsuario(id, userUpdateDto);
+	}
+
+	@GetMapping
+	public ResponseEntity<?> getUsers(){
+		return userService.buscarTodosUsuarios();
+	}
+
+	@GetMapping(value = "/page")
+	public ResponseEntity<?> getUsersByPage(@PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0, size = 1) Pageable paginacao){
+		return userService.buscarTodosUsuariosPorPagina(paginacao);
+	}
 
 }

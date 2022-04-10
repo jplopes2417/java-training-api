@@ -1,11 +1,3 @@
-# java-training-api
-
-Esse repositório disponibiliza uma versão zero de uma API de cadastro de usuários (Users) na pasta [SRC](https://github.com/GuillaumeFalourd/java-training-api/tree/main/src) *a ser melhorada*.
-
-## DESAFIOS
-
-Os desafios podem ser encontrado no arquivo [DESAFIOS.md](https://github.com/GuillaumeFalourd/java-training-api/tree/main/DESAFIOS.md) e correspondem (atualmente) ao nível de conhecimento esperado por desenvolvedores **JUNIORS**.
-
 ## Requisitos
 
 - Maven
@@ -39,7 +31,6 @@ Para rodar a aplicação localmente, executar o metodo `main` da classe [Trainin
 
 ```json
 {
-    "id": 1,
     "name":"Name",
     "cpf":"cpf",
     "email":"email",
