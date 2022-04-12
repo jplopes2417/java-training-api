@@ -1,13 +1,11 @@
-package br.com.training.dto;
+package br.com.training.dto.request;
 
 
-import br.com.training.exception.UserNotFoundException;
-import br.com.training.model.User;
-import br.com.training.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,7 +19,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserUpdateDto {
+public class UserRequestDto {
 
     @NotBlank(message = "O nome é obrigatório")
     @Length(min = 3, max = 50, message = "O nome deverá ter no máximo {max} caracteres")
@@ -31,13 +29,12 @@ public class UserUpdateDto {
     @NotBlank(message = "Email não pode estar vazio")
     private String email;
 
-    public User atualizar(Long id, UserRepository userRepository) {
+    @CPF
+    @NotBlank(message = "CPF não estar vazio")
+    private String cpf;
 
-//        User user = userRepository.getOne(id);
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
-        user.setName(this.name);
-        user.setEmail(this.email);
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Past(message = "A data de nascimento não pode estar em branco")
+    private LocalDate birthDate;
 
-        return user;
-    }
 }

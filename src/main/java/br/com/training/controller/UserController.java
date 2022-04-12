@@ -3,22 +3,16 @@ package br.com.training.controller;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import br.com.training.dto.UserRequestDto;
-import br.com.training.dto.UserUpdateDto;
+import br.com.training.dto.request.UserRequestDto;
+import br.com.training.dto.update.UserUpdateDto;
 import br.com.training.service.UserService;
 import br.com.training.service.UserServiceImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Validated
 @RestController

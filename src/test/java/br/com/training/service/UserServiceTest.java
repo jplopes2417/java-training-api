@@ -1,8 +1,8 @@
 package br.com.training.service;
 
-import br.com.training.dto.UserRequestDto;
-import br.com.training.dto.UserResponseDto;
-import br.com.training.dto.UserUpdateDto;
+import br.com.training.dto.request.UserRequestDto;
+import br.com.training.dto.response.UserResponseDto;
+import br.com.training.dto.update.UserUpdateDto;
 import br.com.training.exception.UserApiRequestException;
 import br.com.training.exception.UserNotFoundException;
 import br.com.training.mapper.UserMapper;

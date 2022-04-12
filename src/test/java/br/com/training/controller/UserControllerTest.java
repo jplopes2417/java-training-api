@@ -1,10 +1,9 @@
 package br.com.training.controller;
 
-import br.com.training.dto.UserRequestDto;
-import br.com.training.dto.UserResponseDto;
-import br.com.training.dto.UserUpdateDto;
+import br.com.training.dto.request.UserRequestDto;
+import br.com.training.dto.response.UserResponseDto;
+import br.com.training.dto.update.UserUpdateDto;
 import br.com.training.mapper.UserMapper;
-import br.com.training.model.User;
 import br.com.training.repository.UserRepository;
 import br.com.training.service.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;

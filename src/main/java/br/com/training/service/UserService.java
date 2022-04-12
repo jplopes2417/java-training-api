@@ -1,7 +1,7 @@
 package br.com.training.service;
 
-import br.com.training.dto.UserRequestDto;
-import br.com.training.dto.UserUpdateDto;
+import br.com.training.dto.request.UserRequestDto;
+import br.com.training.dto.update.UserUpdateDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
