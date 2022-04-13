@@ -1,13 +1,14 @@
 package br.com.training.service;
 
-import br.com.training.dto.request.UserRequestDto;
-import br.com.training.dto.response.UserResponseDto;
-import br.com.training.dto.update.UserUpdateDto;
-import br.com.training.exception.UserApiRequestException;
-import br.com.training.exception.UserNotFoundException;
-import br.com.training.mapper.UserMapper;
+import br.com.training.dto.user.UserRequestDto;
+import br.com.training.dto.user.UserResponseDto;
+import br.com.training.dto.user.UserUpdateDto;
+import br.com.training.exception.user.UserApiRequestException;
+import br.com.training.exception.user.UserNotFoundException;
+import br.com.training.mapper.user.UserMapper;
 import br.com.training.model.User;
-import br.com.training.repository.UserRepository;
+import br.com.training.repository.user.UserRepository;
+import br.com.training.service.user.UserServiceImpl;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

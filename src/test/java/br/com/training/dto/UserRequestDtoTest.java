@@ -1,6 +1,6 @@
 package br.com.training.dto;
 
-import br.com.training.dto.request.UserRequestDto;
+import br.com.training.dto.user.UserRequestDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

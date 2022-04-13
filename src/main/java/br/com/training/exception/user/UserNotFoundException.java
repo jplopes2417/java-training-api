@@ -1,4 +1,4 @@
-package br.com.training.exception;
+package br.com.training.exception.user;
 
 public class UserNotFoundException extends RuntimeException {
 

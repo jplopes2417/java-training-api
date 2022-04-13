@@ -1,4 +1,4 @@
-package br.com.training.dto.request;
+package br.com.training.dto.user;
 
 
 import lombok.AllArgsConstructor;

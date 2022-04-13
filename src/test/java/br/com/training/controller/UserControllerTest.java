@@ -1,11 +1,12 @@
 package br.com.training.controller;
 
-import br.com.training.dto.request.UserRequestDto;
-import br.com.training.dto.response.UserResponseDto;
-import br.com.training.dto.update.UserUpdateDto;
-import br.com.training.mapper.UserMapper;
-import br.com.training.repository.UserRepository;
-import br.com.training.service.UserServiceImpl;
+import br.com.training.controller.user.UserController;
+import br.com.training.dto.user.UserRequestDto;
+import br.com.training.dto.user.UserResponseDto;
+import br.com.training.dto.user.UserUpdateDto;
+import br.com.training.mapper.user.UserMapper;
+import br.com.training.repository.user.UserRepository;
+import br.com.training.service.user.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.json.JSONObject;

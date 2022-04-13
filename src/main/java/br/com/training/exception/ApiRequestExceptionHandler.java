@@ -1,5 +1,7 @@
 package br.com.training.exception;
 
+import br.com.training.exception.user.UserApiRequestException;
+import br.com.training.exception.user.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
