@@ -14,7 +14,6 @@ public class SwaggerConfigurations {
 
     @Bean
     public Docket userApi(){
-        System.out.println("ABRIU A DOCUMENTAÇÃO");
         return new Docket(DocumentationType.SWAGGER_2)
                 .useDefaultResponseMessages(false)
                 .select()
