@@ -26,9 +26,14 @@ public class Bet {
 //    @JoinColumn(name = "cpf")
 //    private User user;
 
-    @Column(name = "numbers", nullable = false, columnDefinition = "INT(255)")
-    private HashSet<Integer> numbers;
+    @Column(name = "numbers", nullable = false)
+    private String numbers;
 
     @Column(name = "dt_creation", nullable = false)
     private LocalDateTime createdAt;
+
+    public Bet(String numbers, LocalDateTime createdAt) {
+        this.numbers = numbers;
+        this.createdAt = createdAt;
+    }
 }

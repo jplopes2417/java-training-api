@@ -13,7 +13,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Set;
 
 @Builder
 @NoArgsConstructor

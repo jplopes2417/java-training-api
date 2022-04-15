@@ -37,7 +37,13 @@ public class BetServiceImpl implements BetService {
         isUsuarioExistente(betRequestDto.getCpf());
         isApostaNova(betRequestDto.getNumbers(), betRequestDto.getCpf());
 
-        Bet bet = BetMapper.INSTANCE.toModel(betRequestDto);
+//        Bet bet = BetMapper.INSTANCE.toModel(betRequestDto);
+        Bet bet = new Bet(betRequestDto.getNumbers().toString(), betRequestDto.getCreatedAt());
+
+        String numbers = betRequestDto.getNumbers().toString();
+
+        log.info(numbers);
+        bet.setNumbers(numbers);
 
         betRepository.save(bet);
         betPerUserRepository.save(new BetPerUser(userRepository.findByCpf(betRequestDto.getCpf()), bet));
@@ -82,7 +88,9 @@ public class BetServiceImpl implements BetService {
         log.info("Numbers: " + numbers);
 
         // TODO: Está permitindo duplicar porque a coluna tá sendo criada como binário, tentar com String a lista de numeros
-        HashSet<Bet> betSet = betRepository.getBetByNumbers(numbers, cpf);
+//        HashSet<Bet> betSet = betRepository.getBetByNumbers(numbers, cpf);
+//        HashSet<Bet> betSet = betRepository.getBetByNumbersByte(numbers, cpf);
+        HashSet<Bet> betSet = betRepository.getBetByNumbersString(numbers.toString(), cpf);
 
         log.info("Encontrou ou não a aposta de acordo com os números...");
         log.info("IsEmpty? : " + String.valueOf(betSet.isEmpty()));
