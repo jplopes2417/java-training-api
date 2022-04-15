@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
 
 @Builder
 @Entity
@@ -26,8 +26,8 @@ public class Bet {
 //    @JoinColumn(name = "cpf")
 //    private User user;
 
-    @Column(name = "numbers", nullable = false)
-    private ArrayList<Integer> numbers;
+    @Column(name = "numbers", nullable = false, columnDefinition = "INT(255)")
+    private HashSet<Integer> numbers;
 
     @Column(name = "dt_creation", nullable = false)
     private LocalDateTime createdAt;

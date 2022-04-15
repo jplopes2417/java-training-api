@@ -12,7 +12,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @NoArgsConstructor
@@ -26,7 +27,7 @@ public class BetRequestDto {
 
     @UniqueElements
     @NotEmpty(message = "Os números da aposta não podem estar em branco")
-    private ArrayList<Integer> numbers;
+    private HashSet<Integer> numbers;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Past(message = "A data de criação não pode estar em branco")

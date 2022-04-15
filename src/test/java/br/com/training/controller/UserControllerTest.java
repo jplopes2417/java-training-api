@@ -1,11 +1,14 @@
 package br.com.training.controller;
 
+import br.com.training.controller.bet.BetController;
 import br.com.training.controller.user.UserController;
 import br.com.training.dto.user.UserRequestDto;
 import br.com.training.dto.user.UserResponseDto;
 import br.com.training.dto.user.UserUpdateDto;
 import br.com.training.mapper.user.UserMapper;
 import br.com.training.repository.user.UserRepository;
+import br.com.training.service.bet.BetService;
+import br.com.training.service.bet.BetServiceImpl;
 import br.com.training.service.user.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
@@ -41,6 +44,12 @@ class UserControllerTest {
 
     @InjectMocks
     private UserController userController;
+
+    @InjectMocks
+    private BetController betController;
+
+    @MockBean
+    private BetServiceImpl betService;
 
     @MockBean
     private UserServiceImpl userService;

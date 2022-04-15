@@ -3,6 +3,7 @@ package br.com.training.service.bet;
 import br.com.training.dto.bet.BetRequestDto;
 import br.com.training.exception.bet.BetAlreadyExistsException;
 import br.com.training.exception.user.UserNotFoundException;
+import br.com.training.mapper.bet.BetMapper;
 import br.com.training.model.Bet;
 import br.com.training.model.BetPerUser;
 import br.com.training.model.User;
@@ -14,14 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.HashSet;
 
 @Slf4j
 @Service
 public class BetServiceImpl implements BetService {
-
-    // TODO: Implementar a lógica dos serviços de aposta
 
     private final BetRepository betRepository;
     private final BetPerUserRepository betPerUserRepository;
@@ -35,10 +33,17 @@ public class BetServiceImpl implements BetService {
 
     @Override
     public ResponseEntity<?> salvarAposta(BetRequestDto betRequestDto) {
+
         isUsuarioExistente(betRequestDto.getCpf());
         isApostaNova(betRequestDto.getNumbers(), betRequestDto.getCpf());
 
-//        betRepository.save(bet);
+        Bet bet = BetMapper.INSTANCE.toModel(betRequestDto);
+
+        betRepository.save(bet);
+        betPerUserRepository.save(new BetPerUser(userRepository.findByCpf(betRequestDto.getCpf()), bet));
+
+        log.info("Salvou a aposta certinho...");
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -69,17 +74,22 @@ public class BetServiceImpl implements BetService {
         }
     }
 
-    private void isApostaNova(ArrayList<Integer> numbers, String cpf) {
+    private void isApostaNova(HashSet<Integer> numbers, String cpf) {
         User user = userRepository.findByCpf(cpf);
-        Optional<Bet> betOptional = betRepository.getBetByNumbers(numbers);
-        // TODO: Procurar na BetPerUserRepository se a aposta que retornou é daquele usuário pelo ID da Aposta
-        Optional<BetPerUser> betPerUser = betPerUserRepository.findByUserAndBet(user.getId(), betOptional.get().getBetId());
+        log.info("Procurando pelos números...");
 
-        if (betPerUser.isEmpty()){
-            log.info("Não foi encontrada aposta para o CPF: " + cpf);
-        } else {
-            log.error("Já existe uma aposta para o CPF: " + cpf);
-            throw new BetAlreadyExistsException("Aposta já existe!");
+
+        log.info("Numbers: " + numbers);
+
+        // TODO: Está permitindo duplicar porque a coluna tá sendo criada como binário, tentar com String a lista de numeros
+        HashSet<Bet> betSet = betRepository.getBetByNumbers(numbers, cpf);
+
+        log.info("Encontrou ou não a aposta de acordo com os números...");
+        log.info("IsEmpty? : " + String.valueOf(betSet.isEmpty()));
+
+        if (!betSet.isEmpty()){
+            throw new BetAlreadyExistsException("Aposta já existe para o usuário: " + cpf);
         }
+
     }
 }
