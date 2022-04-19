@@ -11,7 +11,7 @@ public interface BetMapper {
 
     BetMapper INSTANCE = Mappers.getMapper(BetMapper.class);
 
-    Bet toModel(BetRequestDto betRequestDto);
-    BetRequestDto toBetRequestDto(Bet bet);
+//    Bet toModel(BetRequestDto betRequestDto);
+//    BetRequestDto toBetRequestDto(Bet bet);
 
 }

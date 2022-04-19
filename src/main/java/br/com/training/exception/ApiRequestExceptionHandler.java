@@ -1,6 +1,7 @@
 package br.com.training.exception;
 
 import br.com.training.exception.bet.BetAlreadyExistsException;
+import br.com.training.exception.bet.BetNotFoundException;
 import br.com.training.exception.user.UserApiRequestException;
 import br.com.training.exception.user.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,19 @@ public class ApiRequestExceptionHandler {
     @ExceptionHandler(value = {BetAlreadyExistsException.class})
     public ResponseEntity<Object> betAlreadyExistsException(BetAlreadyExistsException e) {
         HttpStatus notFound = HttpStatus.BAD_REQUEST;
+
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                notFound,
+                ZonedDateTime.now(ZoneId.of("Z"))
+        );
+
+        return new ResponseEntity<>(apiException, notFound);
+    }
+
+    @ExceptionHandler(value = {BetNotFoundException.class})
+    public ResponseEntity<Object> betNotFoundException(BetNotFoundException e) {
+        HttpStatus notFound = HttpStatus.NOT_FOUND;
 
         ApiException apiException = new ApiException(
                 e.getMessage(),

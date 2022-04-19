@@ -42,4 +42,18 @@ public class BetController {
         return betService.salvarAposta(betRequestDto);
     }
 
+    @DeleteMapping(value = "/{id}")
+    @Transactional
+    @ApiOperation("Deletar aposta pelo ID")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Aposta deletada"),
+            @ApiResponse(code = 400, message = "Ocorreu um erro no processamento"),
+            @ApiResponse(code = 404, message = "Aposta não encontrada no banco de dados"),
+            @ApiResponse(code = 500, message = "Ocorreu um erro interno")
+
+    })
+    public ResponseEntity deletarAposta(@PathVariable Long id){
+        return betService.deletarAposta(id);
+    }
+
 }
