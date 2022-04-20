@@ -9,7 +9,7 @@ public interface BetService {
 
     ResponseEntity<?> salvarAposta(BetRequestDto user);
     ResponseEntity<?> deletarAposta(Long id);
-    ResponseEntity<?> buscarAposta(String cpf);
+    ResponseEntity<?> buscarAposta(Long id);
     ResponseEntity<?> buscarTodasApostas();
 
 }

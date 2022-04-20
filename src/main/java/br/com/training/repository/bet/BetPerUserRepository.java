@@ -16,4 +16,7 @@ public interface BetPerUserRepository extends JpaRepository<BetPerUser, Long> {
     @Modifying
     @Query(value = "DELETE FROM BET_USER BU WHERE BU.USER_ID = ?1", nativeQuery = true)
     void deleteByBet(Long betId);
+
+    @Query(value = "SELECT * FROM BET_USER BU WHERE BU.BET_ID = ?1", nativeQuery = true)
+    Optional<BetPerUser> findByBet(Long id);
 }

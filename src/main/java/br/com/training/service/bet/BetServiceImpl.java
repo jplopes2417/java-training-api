@@ -1,6 +1,7 @@
 package br.com.training.service.bet;
 
 import br.com.training.dto.bet.BetRequestDto;
+import br.com.training.dto.bet.BetResponseDto;
 import br.com.training.exception.bet.BetAlreadyExistsException;
 import br.com.training.exception.bet.BetNotFoundException;
 import br.com.training.exception.user.UserNotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -37,10 +39,12 @@ public class BetServiceImpl implements BetService {
     public ResponseEntity<?> salvarAposta(BetRequestDto betRequestDto) {
 
         isUsuarioExistente(betRequestDto.getCpf());
+
         Collections.sort(betRequestDto.getNumbers());
+
         isApostaNova(betRequestDto.getNumbers(), betRequestDto.getCpf());
 
-        Bet bet = new Bet(betRequestDto.getNumbers().toString(), betRequestDto.getCreatedAt());
+        Bet bet = new Bet(formatNumbers(betRequestDto.getNumbers().toString()), betRequestDto.getCreatedAt());
 
         betRepository.save(bet);
         betPerUserRepository.save(new BetPerUser(userRepository.findByCpf(betRequestDto.getCpf()), bet));
@@ -64,8 +68,21 @@ public class BetServiceImpl implements BetService {
     }
 
     @Override
-    public ResponseEntity<?> buscarAposta(String cpf) {
-        return null;
+    public ResponseEntity<?> buscarAposta(Long id) {
+
+        Optional<BetPerUser> betPerUser = betPerUserRepository.findByBet(id);
+        transformStringInArray(betPerUser.get().getBet().getNumbers());
+        BetResponseDto responseDto = new BetResponseDto();
+
+        if(betPerUser.isEmpty()){
+            responseDto.setCpf(betPerUser.get().getUser().getCpf());
+            responseDto.setNumbers(transformStringInArray(betPerUser.get().getBet().getNumbers()));
+            responseDto.setCreatedAt(betPerUser.get().getBet().getCreatedAt());
+        }
+
+
+        log.info("Chegou até o final do método BUSCAR APOSTA.");
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @Override
@@ -88,14 +105,35 @@ public class BetServiceImpl implements BetService {
         log.info("Procurando pelos números...");
         log.info("Numbers: " + numbers);
 
-        HashSet<Bet> betSet = betRepository.getBetByNumbersString(numbers.toString(), cpf);
+        HashSet<Bet> betSet = betRepository.getBetByNumbersString(formatNumbers(numbers.toString()), cpf);
 
         log.info("Encontrou ou não a aposta de acordo com os números...");
-        log.info("Foi encontrado alguma aposta? : " + String.valueOf(betSet.isEmpty()));
+        log.info("betSet is empty? : " + String.valueOf(betSet.isEmpty()));
 
         if (!betSet.isEmpty()){
             throw new BetAlreadyExistsException("Aposta já existe para o usuário: " + cpf);
         }
 
     }
+
+    // TODO: Separar estes dois métodos para uma classe utilitária
+    private String formatNumbers(String numbers){
+
+        StringBuilder sb = new StringBuilder(numbers);
+        sb.deleteCharAt(0);
+        sb.deleteCharAt(sb.length() - 1);
+
+        return sb.toString();
+    }
+
+    private ArrayList<Integer> transformStringInArray(String numbersString){
+
+        ArrayList<Integer> numbers = new ArrayList<>();
+        String[] split = numbersString.split(",");
+        for (int i = 0; i < split.length; i++) {
+            numbers.add(Integer.valueOf(split[i].trim()));
+        }
+        return numbers;
+    }
+
 }
