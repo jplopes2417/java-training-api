@@ -1,4 +1,4 @@
-package br.com.training.dto;
+package br.com.training.dto.user;
 
 import br.com.training.dto.user.UserRequestDto;
 import org.junit.jupiter.api.Test;

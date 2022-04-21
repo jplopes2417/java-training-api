@@ -1,4 +1,4 @@
-package br.com.training.service;
+package br.com.training.service.user;
 
 import br.com.training.dto.user.UserRequestDto;
 import br.com.training.dto.user.UserResponseDto;

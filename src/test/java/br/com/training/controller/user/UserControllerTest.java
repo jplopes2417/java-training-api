@@ -1,13 +1,11 @@
-package br.com.training.controller;
+package br.com.training.controller.user;
 
 import br.com.training.controller.bet.BetController;
-import br.com.training.controller.user.UserController;
 import br.com.training.dto.user.UserRequestDto;
 import br.com.training.dto.user.UserResponseDto;
 import br.com.training.dto.user.UserUpdateDto;
 import br.com.training.mapper.user.UserMapper;
 import br.com.training.repository.user.UserRepository;
-import br.com.training.service.bet.BetService;
 import br.com.training.service.bet.BetServiceImpl;
 import br.com.training.service.user.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +33,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(UserController.class)
