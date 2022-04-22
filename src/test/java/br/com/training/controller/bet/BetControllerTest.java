@@ -6,7 +6,10 @@ import br.com.training.repository.bet.BetRepository;
 import br.com.training.service.bet.BetServiceImpl;
 import br.com.training.service.user.UserServiceImpl;
 import br.com.training.utils.BetUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,8 +33,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(BetController.class)
 @ExtendWith(SpringExtension.class)
@@ -75,6 +84,18 @@ class BetControllerTest {
     }
 
     @Test
+    void enviarApostaJaExistenteNoBancoDeDados() throws Exception {
+        ResponseEntity responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        Mockito.when(betService.salvarAposta(Mockito.any())).thenReturn(responseEntity);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(uri)
+                        .content(getBetAsString())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
     void deletarAposta() throws Exception{
         URI uri = new URI("/bets/1");
         ResponseEntity responseEntity = new ResponseEntity<>(null, HttpStatus.OK);
@@ -105,10 +126,56 @@ class BetControllerTest {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                         .get(urlBuscarPorAposta, 1))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.cpf").value(betResponseDto.getCpf()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.numbers").value(betResponseDto.getNumbers()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdAt").value(betResponseDto.getCreatedAt().toString()))
+                .andExpect(jsonPath("$.cpf").value(betResponseDto.getCpf()))
+                .andExpect(jsonPath("$.numbers").value(betResponseDto.getNumbers()))
+                .andExpect(jsonPath("$.createdAt").value(betResponseDto.getCreatedAt().toString()))
                 .andReturn();
+    }
+
+    @Test
+    void buscarMaisDeUmaAposta() throws Exception{
+        String urlBuscarPorAposta = "/bets";
+
+        ArrayList<Integer> numbers1 = new ArrayList<>();
+        numbers1.add(1);
+        numbers1.add(2);
+        numbers1.add(3);
+
+        ArrayList<Integer> numbers2 = new ArrayList<>();
+        numbers1.add(7);
+        numbers1.add(8);
+
+        BetResponseDto betResponseDto = BetResponseDto.
+                builder().
+                cpf("536.778.450-09").
+                numbers(numbers1).
+                createdAt(LocalDateTime.now()).
+                build();
+
+        BetResponseDto betResponseDto2 = BetResponseDto.
+                builder().
+                cpf("186.870.960-46").
+                numbers(numbers2).
+                createdAt(LocalDateTime.now()).
+                build();
+
+        List<BetResponseDto> betResponseDtos = new ArrayList<>();
+        betResponseDtos.add(betResponseDto);
+        betResponseDtos.add(betResponseDto2);
+
+        ResponseEntity response = new ResponseEntity<>(betResponseDtos, HttpStatus.OK);
+        Mockito.when(betService.buscarTodasApostas()).thenReturn(response);
+
+        System.out.println(response);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get(urlBuscarPorAposta).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].cpf", Matchers.containsInAnyOrder(betResponseDto.getCpf(), betResponseDto2.getCpf())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].numbers", Matchers.containsInAnyOrder(betResponseDto.getNumbers(), betResponseDto2.getNumbers())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].createdAt", Matchers.containsInAnyOrder(betResponseDto.getCreatedAt().toString(), betResponseDto2.getCreatedAt().toString())));
     }
 
     private String getBetAsString() {
@@ -119,5 +186,15 @@ class BetControllerTest {
                 "    2, 1, 0, 3\n" +
                 "  ]\n" +
                 "}";
+    }
+
+    private String convertObjectToJsonString(List<BetResponseDto> betResponseDtos){
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(betResponseDtos);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
     }
 }

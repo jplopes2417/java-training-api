@@ -58,7 +58,7 @@ public class BetController {
 
     @GetMapping(value = "/{id}")
     @Transactional
-    @ApiOperation("Deletar aposta pelo ID")
+    @ApiOperation("Buscar aposta pelo ID")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Aposta encontrada"),
             @ApiResponse(code = 400, message = "Ocorreu um erro no processamento"),
@@ -70,4 +70,17 @@ public class BetController {
         return betService.buscarAposta(id);
     }
 
+    @GetMapping()
+    @Transactional
+    @ApiOperation("Buscar todas as apostas")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Aposta encontrada"),
+            @ApiResponse(code = 400, message = "Ocorreu um erro no processamento"),
+            @ApiResponse(code = 404, message = "Aposta não encontrada no banco de dados"),
+            @ApiResponse(code = 500, message = "Ocorreu um erro interno")
+
+    })
+    public ResponseEntity retornarTodasAsApostas(){
+        return betService.buscarTodasApostas();
+    }
 }

@@ -20,10 +20,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class BetServiceImpl implements BetService {
+
+    private final String MSG_BET_NOT_FOUND = "Aposta não encontrada na base de dados!";
 
     private final BetRepository betRepository;
     private final BetPerUserRepository betPerUserRepository;
@@ -58,7 +62,7 @@ public class BetServiceImpl implements BetService {
     public ResponseEntity<?> deletarAposta(Long id) {
         log.info("Deletando a aposta de ID: " + id);
 
-        Bet bet = betRepository.findById(id).orElseThrow(() -> new BetNotFoundException("Aposta não encontrada!"));
+        Bet bet = betRepository.findById(id).orElseThrow(() -> new BetNotFoundException(MSG_BET_NOT_FOUND));
         betPerUserRepository.deleteByBet(bet.getBetId());
         betRepository.deleteById(bet.getBetId());
 
@@ -70,7 +74,7 @@ public class BetServiceImpl implements BetService {
     @Override
     public ResponseEntity<?> buscarAposta(Long id) {
 
-        BetPerUser betPerUser = betPerUserRepository.findByBet(id).orElseThrow(() -> new BetNotFoundException("Não encontrou a aposta no repository!"));
+        BetPerUser betPerUser = betPerUserRepository.findByBet(id).orElseThrow(() -> new BetNotFoundException(MSG_BET_NOT_FOUND));
         log.info("#################################################################");
         log.info("BET PER USER SEM O OPTIONAL: " + betPerUser.toString());
         log.info("#################################################################");
@@ -85,7 +89,20 @@ public class BetServiceImpl implements BetService {
 
     @Override
     public ResponseEntity<?> buscarTodasApostas() {
-        return null;
+        log.info("Buscando todas as apostas na base...");
+        Set<BetPerUser> betPerUsers = new HashSet<>(betPerUserRepository.findAll());
+
+        if(betPerUsers.isEmpty()){
+            log.error("Lista está vazia!");
+            throw new BetNotFoundException(MSG_BET_NOT_FOUND);
+        }
+
+        Set<BetResponseDto> responseDtos = betPerUsers
+                .stream()
+                .map(betPerUser -> new BetResponseDto(betPerUser.getUser().getCpf(), BetUtils.transformStringInArray(betPerUser.getBet().getNumbers()), betPerUser.getBet().getCreatedAt()))
+                .collect(Collectors.toSet());
+
+        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
     private void isUsuarioExistente(String cpf) {
