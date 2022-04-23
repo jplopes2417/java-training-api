@@ -1,5 +1,6 @@
-package br.com.training.model;
+package br.com.training.model.bet;
 
+import br.com.training.model.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

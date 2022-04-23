@@ -27,8 +27,6 @@ public class BetController {
         this.betService = betService;
     }
 
-    // TODO: Terminar de implementar os serviços
-
     @PostMapping
     @Transactional
     @ApiOperation("Criar nova aposta")

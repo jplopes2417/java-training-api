@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public class BetUtils {
 
+    private BetUtils() {
+        throw new IllegalStateException("Utility class.");
+    }
+
     public static String formatNumbers(String numbers){
 
         StringBuilder sb = new StringBuilder(numbers);

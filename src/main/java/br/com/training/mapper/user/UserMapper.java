@@ -2,7 +2,7 @@ package br.com.training.mapper.user;
 
 import br.com.training.dto.user.UserRequestDto;
 import br.com.training.dto.user.UserResponseDto;
-import br.com.training.model.User;
+import br.com.training.model.user.User;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 

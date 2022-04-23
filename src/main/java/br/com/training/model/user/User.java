@@ -1,4 +1,4 @@
-package br.com.training.model;
+package br.com.training.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package br.com.training.model;
+package br.com.training.model.bet;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 
 @Builder
 @Entity
@@ -21,10 +20,6 @@ public class Bet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bet_id")
     private Long betId;
-
-//    @ManyToOne()
-//    @JoinColumn(name = "cpf")
-//    private User user;
 
     @Column(name = "numbers", nullable = false)
     private String numbers;

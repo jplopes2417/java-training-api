@@ -2,7 +2,7 @@ package br.com.training.dto.user;
 
 
 import br.com.training.exception.user.UserNotFoundException;
-import br.com.training.model.User;
+import br.com.training.model.user.User;
 import br.com.training.repository.user.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

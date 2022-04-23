@@ -6,7 +6,7 @@ import br.com.training.dto.user.UserUpdateDto;
 import br.com.training.exception.user.UserApiRequestException;
 import br.com.training.exception.user.UserNotFoundException;
 import br.com.training.mapper.user.UserMapper;
-import br.com.training.model.User;
+import br.com.training.model.user.User;
 import br.com.training.repository.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,15 +52,15 @@ public class UserServiceImpl implements UserService {
         User user = buscarUsuarioPorId(id);
         log.info("Deletando o usuário de ID: " + id);
         userRepository.deleteById(user.getId());
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<?> atualizarUsuario(long id, UserUpdateDto userDto) {
         log.info("Atualizando o usuário: " + userDto);
         validarEmailExistente(userDto.getEmail());
-        User user = userDto.atualizar(id, userRepository);
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        userDto.atualizar(id, userRepository);
+        return new ResponseEntity<>( HttpStatus.OK);
 
     }
 

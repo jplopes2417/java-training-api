@@ -5,9 +5,9 @@ import br.com.training.dto.bet.BetResponseDto;
 import br.com.training.exception.bet.BetAlreadyExistsException;
 import br.com.training.exception.bet.BetNotFoundException;
 import br.com.training.exception.user.UserNotFoundException;
-import br.com.training.model.Bet;
-import br.com.training.model.BetPerUser;
-import br.com.training.model.User;
+import br.com.training.model.bet.Bet;
+import br.com.training.model.bet.BetPerUser;
+import br.com.training.model.user.User;
 import br.com.training.repository.bet.BetPerUserRepository;
 import br.com.training.repository.bet.BetRepository;
 import br.com.training.repository.user.UserRepository;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class BetServiceImpl implements BetService {
 
-    private final String MSG_BET_NOT_FOUND = "Aposta não encontrada na base de dados!";
+    public static final String MSG_BET_NOT_FOUND = "Aposta não encontrada na base de dados!";
 
     private final BetRepository betRepository;
     private final BetPerUserRepository betPerUserRepository;
@@ -68,7 +68,7 @@ public class BetServiceImpl implements BetService {
 
         log.info("A seguinte aposta foi deletada do banco de dados: " + bet);
 
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override

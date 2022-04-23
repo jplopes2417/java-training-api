@@ -1,6 +1,6 @@
 package br.com.training.repository.bet;
 
-import br.com.training.model.BetPerUser;
+import br.com.training.model.bet.BetPerUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
