@@ -40,7 +40,7 @@ public class BetServiceImpl implements BetService {
     }
 
     @Override
-    public ResponseEntity<?> salvarAposta(BetRequestDto betRequestDto) {
+    public ResponseEntity<HttpStatus> salvarAposta(BetRequestDto betRequestDto) {
 
         isUsuarioExistente(betRequestDto.getCpf());
 
@@ -59,7 +59,7 @@ public class BetServiceImpl implements BetService {
     }
 
     @Override
-    public ResponseEntity<?> deletarAposta(Long id) {
+    public ResponseEntity<HttpStatus> deletarAposta(Long id) {
         log.info("Deletando a aposta de ID: " + id);
 
         Bet bet = betRepository.findById(id).orElseThrow(() -> new BetNotFoundException(MSG_BET_NOT_FOUND));
@@ -72,7 +72,7 @@ public class BetServiceImpl implements BetService {
     }
 
     @Override
-    public ResponseEntity<?> buscarAposta(Long id) {
+    public ResponseEntity<BetResponseDto> buscarAposta(Long id) {
 
         BetPerUser betPerUser = betPerUserRepository.findByBet(id).orElseThrow(() -> new BetNotFoundException(MSG_BET_NOT_FOUND));
         log.info("#################################################################");
@@ -88,7 +88,7 @@ public class BetServiceImpl implements BetService {
     }
 
     @Override
-    public ResponseEntity<?> buscarTodasApostas() {
+    public ResponseEntity<Set<BetResponseDto>> buscarTodasApostas() {
         log.info("Buscando todas as apostas na base...");
         Set<BetPerUser> betPerUsers = new HashSet<>(betPerUserRepository.findAll());
 
@@ -122,7 +122,7 @@ public class BetServiceImpl implements BetService {
         HashSet<Bet> betSet = betRepository.getBetByNumbersString(BetUtils.formatNumbers(numbers.toString()), cpf);
 
         log.info("Encontrou ou não a aposta de acordo com os números...");
-        log.info("betSet is empty? : " + String.valueOf(betSet.isEmpty()));
+        log.info("betSet is empty? : " + betSet.isEmpty());
 
         if (!betSet.isEmpty()){
             throw new BetAlreadyExistsException("Aposta já existe para o usuário: " + cpf);

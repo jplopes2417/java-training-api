@@ -2,19 +2,24 @@ package br.com.training.dto.bet;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode
-public class BetConfigurationRequestDto {
+public class BetConfigurationResponseDto {
 
-    @NotBlank(message = "Identificador da aposta precisa ser informado!")
+    private String betName;
+
     private String key;
 
-    @NotBlank(message = "Valor precisa ser informado!")
     private int value;
 
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }
