@@ -12,5 +12,6 @@ public interface BetConfigurationMapper {
     BetConfigurationMapper INSTANCE = Mappers.getMapper(BetConfigurationMapper.class);
     BetConfiguration toModel(BetConfigurationRequestDto betConfigurationRequestDto);
     BetConfiguration toModelFromResponse(BetConfigurationResponseDto betConfigurationResponseDto);
+    BetConfigurationResponseDto toResponseFromModel(BetConfiguration betConfiguration);
 
 }

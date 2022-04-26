@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 
 @Slf4j
@@ -34,16 +36,6 @@ public class BetConfigurationImpl implements BetConfigurationService {
 
         betConfiguration.setCreatedAt(LocalDateTime.now());
         betConfigurationRepository.save(betConfiguration);
-
-        // TODO: Estudar porque quando inicializo um objeto, o hibernate não permite salvar no banco por causa do ID
-
-//        BetType betType = BetType
-//                .builder()
-//                .betConfiguration(betConfiguration)
-//                .betName(betConfigurationRequestDto.getBetName())
-//                .build();
-
-//        betTypeRepository.save(betType);
         betTypeRepository.save(new BetType(betConfigurationRequestDto.getBetName(), betConfiguration));
         log.info("Configuração salva no banco!");
     }
@@ -51,16 +43,40 @@ public class BetConfigurationImpl implements BetConfigurationService {
     @Override
     public void deletarConfiguracaoAposta(String id) {
         log.info("Deletando a configuração com o seguinte ID: " + id);
-        BetConfiguration betConfiguration = betConfigurationRepository.findById(id).orElseThrow(() -> new BetConfigurationNotFoundException("Bet Config not found."));
-        BetType betType = betTypeRepository.findByBetConfiguration(betConfiguration);
-        betTypeRepository.deleteById(betType.getBetTypeId());
+
+        BetConfiguration betConfiguration = betConfigurationRepository
+                .findById(id)
+                .orElseThrow(() -> new BetConfigurationNotFoundException("Bet Config not found."));
+
+        ArrayList<BetType> byBetConfiguration = betTypeRepository.findByBetConfiguration(betConfiguration);
+
+        byBetConfiguration.forEach(betType -> betTypeRepository.deleteById(betType.getBetTypeId()));
+
         betConfigurationRepository.deleteById(betConfiguration.getKey());
         log.info("Aposta deletada.");
     }
 
     @Override
-    public BetConfigurationResponseDto buscarConfiguracaoAposta(String id) {
-        return null;
+    public BetConfigurationResponseDto buscarConfiguracaoAposta(String betName) {
+        log.info("Buscando as configurações da aposta: " + betName);
+        ArrayList<BetType> byBetConfiguration = betTypeRepository.findByBetName(betName);
+
+        if(byBetConfiguration.isEmpty()){
+            throw new BetConfigurationNotFoundException("Bet Not Found!");
+        }
+
+        BetConfiguration betConfiguration = byBetConfiguration.stream().distinct().findFirst().get().getBetConfiguration();
+
+        BetConfigurationResponseDto betConfigurationResponseDto = BetConfigurationMapper.INSTANCE.toResponseFromModel(betConfiguration);
+
+        byBetConfiguration.forEach(betType -> betConfigurationResponseDto.setBetName(betType.getBetName()));
+
+        HashMap<String, Integer> hashMap = new HashMap<>();
+
+        byBetConfiguration.forEach(betType -> hashMap.put(betType.getBetConfiguration().getKey(), betType.getBetConfiguration().getValue()));
+        betConfigurationResponseDto.setParams(hashMap);
+
+        return betConfigurationResponseDto;
     }
 
     @Override

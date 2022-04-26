@@ -1,6 +1,7 @@
 package br.com.training.controller.bet;
 
 import br.com.training.dto.bet.BetConfigurationRequestDto;
+import br.com.training.dto.bet.BetConfigurationResponseDto;
 import br.com.training.service.bet.BetConfigurationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,5 +51,18 @@ public class BetConfigurationController {
     })
     public void deletarConfiguracao(@PathVariable String id){
         betConfigurationService.deletarConfiguracaoAposta(id);
+    }
+
+    @GetMapping(value = "/{id}")
+    @Transactional
+    @ApiOperation("Buscar configuração pelo ID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Configuração encontrada"),
+            @ApiResponse(code = 400, message = "Ocorreu um erro no processamento"),
+            @ApiResponse(code = 404, message = "Aposta não encontrada no banco de dados"),
+            @ApiResponse(code = 500, message = "Ocorreu um erro interno")
+    })
+    public BetConfigurationResponseDto buscarConfiguracaoAposta(@PathVariable String id){
+        return betConfigurationService.buscarConfiguracaoAposta(id);
     }
 }

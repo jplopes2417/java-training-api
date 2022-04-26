@@ -11,6 +11,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
+@ToString
 public class BetResponseDto {
 
     private String cpf;

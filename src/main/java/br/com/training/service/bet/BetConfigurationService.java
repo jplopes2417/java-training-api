@@ -12,7 +12,7 @@ public interface BetConfigurationService {
 
     void salvarNovaConfiguracaoAposta(BetConfigurationRequestDto betConfigurationRequestDto);
     void deletarConfiguracaoAposta(String id);
-    BetConfigurationResponseDto buscarConfiguracaoAposta(String id);
+    BetConfigurationResponseDto buscarConfiguracaoAposta(String betName);
     Set<BetConfigurationResponseDto> buscarTodasConfiguracoesApostas();
 
 }

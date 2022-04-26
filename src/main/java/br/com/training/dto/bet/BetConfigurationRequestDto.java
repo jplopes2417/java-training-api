@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode
+@ToString
 public class BetConfigurationRequestDto {
 
     @NotBlank(message = "O nome da aposta é obrigatório")

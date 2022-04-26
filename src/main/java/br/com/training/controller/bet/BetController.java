@@ -65,7 +65,6 @@ public class BetController {
             @ApiResponse(code = 400, message = "Ocorreu um erro no processamento"),
             @ApiResponse(code = 404, message = "Aposta não encontrada no banco de dados"),
             @ApiResponse(code = 500, message = "Ocorreu um erro interno")
-
     })
     public ResponseEntity<BetResponseDto> procurarAposta(@PathVariable Long id){
         return betService.buscarAposta(id);
