@@ -2,14 +2,17 @@ package br.com.training.model.bet;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
+import org.hibernate.action.internal.OrphanRemovalAction;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Builder
 @Entity
 @Table(name = "bet_type")
@@ -20,13 +23,18 @@ public class BetType {
     @Column(name = "bet_type_id", nullable = false)
     private Long betTypeId;
 
-    @Column(name = "bet_type", nullable = false)
+    @Column(name = "bet_name", nullable = false)
     private String betName;
 
     @ManyToOne
-    @Column(name = "bet_key")
-    @JoinColumn(name = "key", nullable = false)
-    private Long betKeyId;
+    //@Column(name = "bet_key")
+    @JoinColumn(name = "key_id", nullable = false)
+    private BetConfiguration betConfiguration;
+
+    public BetType(String betName, BetConfiguration betConfiguration) {
+        this.betName = betName;
+        this.betConfiguration = betConfiguration;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -10,9 +10,9 @@ import java.util.Set;
 
 public interface BetConfigurationService {
 
-    ResponseEntity<HttpStatus> salvarNovaConfiguracaoAposta(BetConfigurationRequestDto betConfigurationRequestDto);
-    ResponseEntity<HttpStatus> deletarConfiguracaoAposta(Long id);
-    ResponseEntity<BetConfigurationResponseDto> buscarConfiguracaoAposta(Long id);
-    ResponseEntity<Set<BetConfigurationResponseDto>> buscarTodasConfiguracoesApostas();
+    void salvarNovaConfiguracaoAposta(BetConfigurationRequestDto betConfigurationRequestDto);
+    void deletarConfiguracaoAposta(String id);
+    BetConfigurationResponseDto buscarConfiguracaoAposta(String id);
+    Set<BetConfigurationResponseDto> buscarTodasConfiguracoesApostas();
 
 }

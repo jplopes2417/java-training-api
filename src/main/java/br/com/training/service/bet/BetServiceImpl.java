@@ -68,7 +68,7 @@ public class BetServiceImpl implements BetService {
 
         log.info("A seguinte aposta foi deletada do banco de dados: " + bet);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Override
