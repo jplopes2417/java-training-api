@@ -2,6 +2,7 @@ package br.com.training.controller.bet;
 
 import br.com.training.dto.bet.BetConfigurationRequestDto;
 import br.com.training.dto.bet.BetConfigurationResponseDto;
+import br.com.training.dto.bet.BetConfigurationUpdateDto;
 import br.com.training.service.bet.BetConfigurationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Validated
 @RestController
@@ -34,7 +37,7 @@ public class BetConfigurationController {
             @ApiResponse(code = 500, message = "Ocorreu um erro interno")
 
     })
-    public void criarNovaConfiguracao(@RequestBody BetConfigurationRequestDto betConfigurationRequestDto){
+    public void criarNovaConfiguracao(@Valid @RequestBody BetConfigurationRequestDto betConfigurationRequestDto){
         betConfigurationService.salvarNovaConfiguracaoAposta(betConfigurationRequestDto);
     }
 
@@ -56,6 +59,7 @@ public class BetConfigurationController {
     @GetMapping(value = "/{id}")
     @Transactional
     @ApiOperation("Buscar configuração pelo ID")
+    @ResponseStatus(HttpStatus.OK)
     @ApiResponses({
             @ApiResponse(code = 200, message = "Configuração encontrada"),
             @ApiResponse(code = 400, message = "Ocorreu um erro no processamento"),
@@ -64,5 +68,19 @@ public class BetConfigurationController {
     })
     public BetConfigurationResponseDto buscarConfiguracaoAposta(@PathVariable String id){
         return betConfigurationService.buscarConfiguracaoAposta(id);
+    }
+
+    @PatchMapping(value = "/{id}")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiOperation("Atualizar configuração")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Configuração atualizada no banco de dados"),
+            @ApiResponse(code = 400, message = "Ocorreu um erro no processamento"),
+            @ApiResponse(code = 404, message = "Configuração não encontrada no banco de dados"),
+            @ApiResponse(code = 500, message = "Ocorreu um erro interno")
+    })
+    public void buscarConfiguracaoAposta(@PathVariable String id, @Valid @RequestBody BetConfigurationUpdateDto betConfigurationUpdateDto){
+        betConfigurationService.atualizarConfiguracaoAposta(id, betConfigurationUpdateDto);
     }
 }

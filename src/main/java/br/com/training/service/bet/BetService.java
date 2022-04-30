@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface BetService {
 
-    ResponseEntity<HttpStatus> salvarAposta(BetRequestDto user);
+    ResponseEntity<HttpStatus> salvarAposta(String betName, BetRequestDto user);
     ResponseEntity<HttpStatus> deletarAposta(Long id);
     ResponseEntity<BetResponseDto> buscarAposta(Long id);
     ResponseEntity<Set<BetResponseDto>> buscarTodasApostas();

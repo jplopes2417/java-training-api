@@ -3,12 +3,11 @@ package br.com.training.controller.bet;
 import br.com.training.dto.bet.BetResponseDto;
 import br.com.training.repository.bet.BetPerUserRepository;
 import br.com.training.repository.bet.BetRepository;
+import br.com.training.service.bet.BetConfigurationServiceImpl;
 import br.com.training.service.bet.BetServiceImpl;
 import br.com.training.service.user.UserServiceImpl;
-import br.com.training.utils.BetUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,18 +26,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import javax.persistence.ManyToMany;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -51,6 +45,9 @@ class BetControllerTest {
 
     @MockBean
     private BetServiceImpl betService;
+
+    @MockBean
+    private BetConfigurationServiceImpl betConfiguration;
 
     @MockBean
     private BetRepository betRepository;
@@ -66,6 +63,9 @@ class BetControllerTest {
 
     private URI uri;
 
+    private final String headerName = "betName";
+    private final String headerValue = "Lotto Facil";
+
     @BeforeEach
     public void setup() throws URISyntaxException {
         uri = new URI("/bets");
@@ -74,10 +74,11 @@ class BetControllerTest {
     @Test
     void criarApostaComSucesso() throws Exception {
         ResponseEntity responseEntity = new ResponseEntity(HttpStatus.CREATED);
-        Mockito.when(betService.salvarAposta(Mockito.any())).thenReturn(responseEntity);
+        Mockito.when(betService.salvarAposta(Mockito.any(), Mockito.any())).thenReturn(responseEntity);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(uri)
+                        .header(headerName, headerValue)
                         .content(getBetAsString())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -86,10 +87,11 @@ class BetControllerTest {
     @Test
     void enviarApostaJaExistenteNoBancoDeDados() throws Exception {
         ResponseEntity responseEntity = new ResponseEntity(HttpStatus.BAD_REQUEST);
-        Mockito.when(betService.salvarAposta(Mockito.any())).thenReturn(responseEntity);
+        Mockito.when(betService.salvarAposta(Mockito.any(), Mockito.any())).thenReturn(responseEntity);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(uri)
+                        .header(headerName, headerValue)
                         .content(getBetAsString())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());

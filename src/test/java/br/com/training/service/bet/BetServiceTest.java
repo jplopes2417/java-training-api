@@ -1,15 +1,19 @@
 package br.com.training.service.bet;
 
+import br.com.training.dto.bet.BetConfigurationResponseDto;
 import br.com.training.dto.bet.BetRequestDto;
 import br.com.training.dto.bet.BetResponseDto;
 import br.com.training.exception.bet.BetAlreadyExistsException;
 import br.com.training.exception.bet.BetNotFoundException;
 import br.com.training.exception.user.UserNotFoundException;
 import br.com.training.model.bet.Bet;
+import br.com.training.model.bet.BetConfiguration;
 import br.com.training.model.bet.BetPerUser;
+import br.com.training.model.bet.BetType;
 import br.com.training.model.user.User;
 import br.com.training.repository.bet.BetPerUserRepository;
 import br.com.training.repository.bet.BetRepository;
+import br.com.training.repository.bet.BetTypeRepository;
 import br.com.training.repository.user.UserRepository;
 import br.com.training.utils.BetUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -41,10 +46,16 @@ class BetServiceTest {
     private BetPerUserRepository betPerUserRepository;
 
     @Mock
+    private BetTypeRepository betTypeRepository;
+
+    @Mock
     private UserRepository userRepository;
 
     @InjectMocks
     private BetServiceImpl betService;
+
+    @Mock
+    private BetConfigurationServiceImpl betConfigurationService;
 
     private BetRequestDto betRequestDto;
 
@@ -55,6 +66,8 @@ class BetServiceTest {
     private Bet bet;
 
     private User user;
+
+    private String betName = "Lotto Facil";
 
     @BeforeEach
     public void setup(){
@@ -99,9 +112,28 @@ class BetServiceTest {
         User userTest = user;
         Bet betTest = bet;
 
+        BetConfiguration betConfiguration = BetConfiguration
+                .builder()
+                .key("Lotto_max_number")
+                .createdAt(LocalDateTime.now())
+                .value(100)
+                .build();
+
+        BetType betType = BetType.builder().betTypeId(1L).betName(betName).betConfiguration(betConfiguration).build();
+        ArrayList<BetType> betTypeArrayList = new ArrayList<>();
+        betTypeArrayList.add(betType);
+        HashMap<String, Integer> hashMap = new HashMap<>();
+        hashMap.put("Lotto_max_number", 100);
+        hashMap.put("Lotto_max_qtd_number", 5);
+
+        BetConfigurationResponseDto betConfigurationResponseDto = new BetConfigurationResponseDto(betName, hashMap, LocalDateTime.now(), null);
+
         Mockito.when(userRepository.findByCpf(betRequestDtoTest.getCpf())).thenReturn(userTest);
-        Mockito.when(betRepository.getBetByNumbersString(Mockito.any(), Mockito.any())).thenReturn(new HashSet<>());
-        betService.salvarAposta(betRequestDto);
+        Mockito.when(betRepository.getBetByNumbersString(BetUtils.formatNumbers(betRequestDtoTest.getNumbers().toString()), betRequestDtoTest.getCpf())).thenReturn(new HashSet<>());
+        Mockito.when(betTypeRepository.findByBetName(betName)).thenReturn(betTypeArrayList);
+        Mockito.lenient().when(betConfigurationService.buscarConfiguracaoAposta(betName)).thenReturn(new BetConfigurationResponseDto(betName, hashMap, LocalDateTime.now(), null));
+
+        betService.salvarAposta(betName, betRequestDto);
 
         Mockito.verify(betRepository, Mockito.times(1)).save(betTest);
     }
@@ -119,7 +151,7 @@ class BetServiceTest {
         Mockito.when(betRepository.getBetByNumbersString(Mockito.any(), Mockito.any())).thenReturn(betHashSet);
 
         Mockito.verify(betRepository, Mockito.times(0)).save(betTest);
-        assertThrows(BetAlreadyExistsException.class, () -> betService.salvarAposta(betRequestDto));
+        assertThrows(BetAlreadyExistsException.class, () -> betService.salvarAposta(betName, betRequestDto));
     }
 
     @Test
@@ -130,7 +162,7 @@ class BetServiceTest {
         Mockito.when(userRepository.findByCpf(betRequestDtoTest.getCpf())).thenReturn(null);
 
         Mockito.verify(betRepository, Mockito.times(0)).save(betTest);
-        assertThrows(UserNotFoundException.class, () -> betService.salvarAposta(betRequestDto));
+        assertThrows(UserNotFoundException.class, () -> betService.salvarAposta(betName, betRequestDto));
     }
 
     @Test

@@ -39,8 +39,8 @@ public class BetController {
             @ApiResponse(code = 500, message = "Ocorreu um erro interno")
 
     })
-    public ResponseEntity<HttpStatus> criarAposta(@Valid @RequestBody BetRequestDto betRequestDto){
-        return betService.salvarAposta(betRequestDto);
+    public ResponseEntity<HttpStatus> criarAposta(@RequestHeader String betName, @Valid @RequestBody BetRequestDto betRequestDto){
+        return betService.salvarAposta(betName, betRequestDto);
     }
 
     @DeleteMapping(value = "/{id}")

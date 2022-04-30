@@ -13,18 +13,14 @@ import javax.validation.constraints.NotNull;
 @Data
 @EqualsAndHashCode
 @ToString
-public class BetConfigurationRequestDto {
+public class BetConfigurationUpdateDto {
 
     @NotBlank(message = "O nome da aposta é obrigatório")
     @Length(min = 3, max = 50, message = "O nome deverá ter no máximo {max} caracteres")
     private String betName;
 
-    @NotBlank(message = "Identificador da aposta precisa ser informado!")
-    @Length(min = 3, max = 50, message = "O nome do identificador da aposta deverá ter no máximo {max} caracteres")
-    private String key;
-
     @NotNull
-    @Min(0)
+    @Min(1)
     private int value;
 
 }
