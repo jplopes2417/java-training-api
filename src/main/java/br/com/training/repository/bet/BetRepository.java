@@ -10,10 +10,10 @@ import java.util.HashSet;
 @Repository
 public interface BetRepository extends JpaRepository<Bet, Long> {
 
-    @Query(value = "SELECT * FROM BET B WHERE B.NUMBERS IN (?1) " +
+    @Query(value = "SELECT * FROM bet B WHERE B.NUMBERS IN (?1) " +
             "AND EXISTS ( SELECT 1 " +
-            "FROM BET_USER BU WHERE BU.BET_ID = B.BET_ID " +
-            "AND BU.USER_ID = (SELECT U.USER_ID FROM USER U WHERE U.CPF = ?2))",
+            "FROM bet_user BU WHERE BU.BET_ID = B.BET_ID " +
+            "AND BU.USER_ID = (SELECT U.USER_ID FROM user U WHERE U.CPF = ?2))",
             nativeQuery = true)
     HashSet<Bet> getBetByNumbersString(String numbers, String cpf);
 

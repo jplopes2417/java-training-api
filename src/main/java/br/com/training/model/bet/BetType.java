@@ -19,7 +19,7 @@ import java.util.Objects;
 public class BetType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bet_type_id", nullable = false)
     private Long betTypeId;
 

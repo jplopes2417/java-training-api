@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class BetPerUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bet_per_user_id", nullable = false)
     private Long id;
 
